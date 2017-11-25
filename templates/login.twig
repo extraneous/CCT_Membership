@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    <div class="navbar-wrapper" style="background-color: #14BD57;min-height:85px;padding-top:5px;padding-left:5px;">
+        <img src="/images/cctlogo.png" style="float:left;margin-right:20px;"/>
+        <h2 style="color:white">Membership Database</h2>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="card card-container">
+            <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+            <p id="profile-name" class="profile-name-card"></p>
+            <form class="form-signin" method="post" autocomplete="off" onsubmit="return subit()">
+                <span id="reauth-email" class="reauth-email"></span>
+                <input type="email" id="inputEmail" class="form-control" autocomplete="off" name="email" placeholder="Email address" required autofocus>
+                <input type="password" id="inputPassword" name="password" autocomplete="off" class="form-control" placeholder="Password" required>
+                <input type="text" id="google2fa" name="twofa" class="form-control" autocomplete="off" placeholder="Google Two Factor Code" required>
+                <input type="hidden" name="token" value="{{ token }}"/>
+                <button class="btn btn-lg btn-block btn-signin" type="submit">Sign in</button>
+            </form><!-- /form -->
+        </div><!-- /card-container -->
+        <p class="bg-info text-center" >{{ errMsg }}</p>
+    </div>
+{% endblock %}

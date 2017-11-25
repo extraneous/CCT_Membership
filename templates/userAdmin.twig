@@ -1,0 +1,210 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    {% include "menu.twig" %}
+{% endblock %}
+
+{% block main %}
+
+    <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Failed Logins</th>
+            <th>Last Login</th>
+            <th style="text-align: center"><button type="button" class="btn btn-primary btn-xs" onclick="addUser()"><i class="fa fa-user"></i> Add New User</button></th>
+        </tr>
+        </thead>
+        <tbody id="userList">
+            {%  for suser in users %}
+            <tr>
+                <td>{{ suser.fname }}</td>
+                <td>{{ suser.surname }}</td>
+                <td>{{ suser.email }}</td>
+                <td style="text-align: center">{% if suser.status == 1 %}<i class="fa fa-check" style="color:green"></i>{% else %}<i class="fa fa-times" style="color:red"></i>{% endif %}</td>
+                <td {% if suser.failedLogins > 4 %}class="bg-danger"{% else %}class="bg-success"{% endif %} style="text-align: center">{{ suser.failedLogins }}</td>
+                <td>{{  suser.lastLogin }}</td>
+                <td style="text-align: center">
+                    <button class="btn btn-primary btn-xs" type="button" onclick="resetLogins({{ suser.id }})"><i class="fa fa-retweet"></i> Reset Failed Logins</button>
+                    <button class="btn btn-primary btn-xs" type="button" onclick="resetGoogle2fa({{ suser.id }})"><i class="fa fa-key"></i> Reset 2FA</button>
+                    <button class="btn btn-primary btn-xs" type="button" onClick="editUser({{ suser.id }})"><i class="fa fa-pencil"></i> Edit</button>
+                    <button class="btn btn-primary btn-xs" type="button" onclick="emailUser({{ suser.id }})"><i class="fa fa-envelope-o"></i> Email User</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUser">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add New User</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#addDetails" aria-controls="Details" role="tab" data-toggle="tab">Details</a></li>
+                        <li role="presentation"><a href="#addPermissions" aria-controls="Permissions" role="tab" data-toggle="tab">Permissions</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="addDetails">
+                            <form class="form form-horizontal" id="addUserFrm">
+                                <div class="form-group" style="margin-top:10px">
+                                    <label for="addFirstName" class="control-label col-sm-3">First Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="firstname" id="addFirstName" maxlength="50"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addSurname" class="control-label col-sm-3">Surname</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="surname" id="addSurname" maxlength="100"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addEmail" class="control-label col-sm-3">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="email" id="addEmail" maxlength="150"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addPassword" class="control-label col-sm-3">Password</label>
+                                    <div class="col-sm-9">
+                                        <input type="password" class="form-control" name="password" id="addPassword" maxlength="150"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addEnabled" class="control-label col-sm-3">Enabled</label>
+                                    <div class="col-sm-9">
+                                        <input type="checkbox" class="checkbox-inline" data-group-cls="btn-group-sm" checked name="enabled" id="addEnabled"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="addPermissions" style="padding-top:10px;">
+                            <form class="form-horizontal" id="permissionsFrm">
+                                {% for permission in permissions %}
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5">{{ permission.name }}</label>
+                                        <div class="col-sm-3">
+                                            <input type="checkbox" data-group-cls="btn-group-sm" class="addPermission checkbox-inline" value="{{ permission.id }}" name="permission[]"/>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times" style="color:red"></i> Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveNewUser()"><i class="fa fa-floppy-o" style="color:white"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUser">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Edit User</h4>
+                </div>
+                <input type="hidden" id="editUserId"/>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#editDetails" aria-controls="Details" role="tab" data-toggle="tab">Details</a></li>
+                        <li role="presentation"><a href="#editPermissions" aria-controls="Permissions" role="tab" data-toggle="tab">Permissions</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="editDetails">
+                            <form class="form form-horizontal" id="editUserFrm">
+                                <div class="form-group" style="margin-top:10px">
+                                    <label for="editFirstName" class="control-label col-sm-3">First Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="firstname" id="editFirstName" maxlength="50"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editSurname" class="control-label col-sm-3">Surname</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="surname" id="editSurname" maxlength="100"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEmail" class="control-label col-sm-3">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="email" id="editEmail" maxlength="150"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editPassword" class="control-label col-sm-3">Password</label>
+                                    <div class="col-sm-9">
+                                        <input type="password" class="form-control" name="password" id="editPassword" maxlength="150" placeholder="Leave Blank Unless Changing"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEnabled" class="control-label col-sm-3">Enabled</label>
+                                    <div class="col-sm-9">
+                                        <input type="checkbox" class="checkbox-inline" data-group-cls="btn-group-sm" checked name="enabled" id="editEnabled"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="editPermissions" style="padding-top:10px;">
+                            <form class="form-horizontal" id="editPermissionsFrm">
+                                {% for permission in permissions %}
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5">{{ permission.name }}</label>
+                                        <div class="col-sm-3">
+                                            <input type="checkbox" data-group-cls="btn-group-sm" class="editPermission checkbox-inline" value="{{ permission.id }}" name="permission[]"/>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times" style="color:red"></i> Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEditUser()"><i class="fa fa-floppy-o" style="color:white"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="sendEmailModal" tabindex="-1" role="dialog" aria-labelledby="sendEmail">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Send Email To User</h4>
+                </div>
+                <input type="hidden" id="emailUserId"/>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="emailSubject" class="col-sm-2 control-label">Subject Line</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="emailSubject" placeholder="Subject">
+                            </div>
+                        </div>
+                        <div class="form-group" style="min-height:200px;padding-left:10px;padding-right:10px">
+                            <div id="summerNoteEditor"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailLoginDets" class="col-sm-4 control-label">Include account login details</label>
+                            <input type="checkbox" id="emailLoginDets" name="emailLoginDets"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times" style="color:red"></i> Close</button>
+                    <button type="button" class="btn btn-primary" onclick="sendEmailToUser()"><i class="fa fa-envelope-o" style="color:white"></i> Send Email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

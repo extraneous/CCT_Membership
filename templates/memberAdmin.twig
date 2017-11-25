@@ -1,0 +1,67 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    {% include "menu.twig" %}
+{% endblock %}
+
+{% block main %}
+<form class="form-horizontal" id="searchFrm">
+    <input type="hidden" id="pageCount" value="{{ pageCount }}"/>
+    <label class="control-label col-sm-1">Number</label>
+    <div class="col-sm-2">
+        <input type="text" id="searchMemNo" class="form-control"/>
+    </div>
+    <label class="control-label col-sm-1">Name</label>
+    <div class="col-sm-2">
+        <input type="text" id="searchMemName" class="form-control"/>
+    </div>
+    <label class="control-label col-sm-2">Post Town</label>
+    <div class="col-sm-2">
+        <input type="text" id="searchMemTown" class="form-control"/>
+    </div>
+    <button type="button" class="btn btn-sm btn-primary" onclick="search()"><i class="fa fa-search"></i> Search</button>
+    <button type="button" class="btn btn-sm btn-primary" onclick="searchReset()"><i class="fa fa-undo"></i> Reset</button>
+</form>
+<table class="table table-bordered table-responsive table-striped" style="margin-top:10px">
+    <thead>
+    <tr>
+        <th>Number</th>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Post Town</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody id="resultTable">
+    {% for member in members %}
+    <tr>
+        <td class="text-center">{{ member.memNo }}</td>
+        <td></td>
+        <td>{{ member.name }}</td>
+        <td>{{ member.PostTown }}</td>
+        <td {% if member.status == 'Live' %}class="text-center bg-success"{% endif %}{% if member.status == 'Lapsed' %}class="text-center bg-danger"{% endif %}>{{ member.status }}</td>
+        <td class="text-center">
+            <button type="button" class="btn btn-primary btn-xs" onclick="editMember('{{ member.memNoEnc }}')"><i class="fa fa-pencil"></i> Edit</button>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div id="pagination" style="float:right"></div>
+
+<script type="text/template" id="resultTemplate">
+<% _.each(rc.members,function(member){ %>
+<tr>
+    <td class="text-center"><%- member.memNo %></td>
+    <td></td>
+    <td><%- member.name %></td>
+    <td><%- member.PostTown %></td>
+    <td <% if(member.status == 'Live'){ %>class="text-center bg-success"<% } %><% if(member.status == 'Lapsed'){ %>class="text-center bg-danger"<% } %>><%- member.status %></td>
+    <td class="text-center">
+        <button type="button" class="btn btn-primary btn-xs" onclick="editMember(<%- member.id %>)"><i class="fa fa-pencil"></i> Edit</button>
+    </td>
+</tr>
+<% }) %>
+</script>
+{% endblock %}

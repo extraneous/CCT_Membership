@@ -1,0 +1,45 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    {% include "menu.twig" %}
+{% endblock %}
+
+{% block main %}
+    <form class="form-horizontal">
+        <label for="editFrmMemType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-4">
+            <select id="editFrmMemType" class="form-control">
+                <option value="-1">Please Seelect</option>
+            </select>
+        </div>
+        <label for="editFrmStatus" class="col-sm-2 control-label">Status</label>
+        <div class="col-sm-4" style="margin-bottom:10px">
+            <select id="edtFrmStatus" class="form-control">
+                <option value="-1">Please Select</option>
+                <option value="AwaitingApproval">Awaiting Approval</option>
+                <option value="Live">Live</option>
+                <option value="Lapsed">Lapsed</option>
+                <option value="Died">Died</option>
+            </select>
+        </div>
+        <div style="text-align:right">
+            <button type="button" class="btn btn-primary" onclick="document.location='/memberAdmin.php'"><i class="fa fa-backward" style="color:red"></i> Cancel</button>
+            <button type="button" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
+        </div>
+    </form>
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#people" aria-controls="people" role="tab" data-toggle="tab">People</a></li>
+            <li role="presentation"><a href="#payments" aria-controls="payments" role="tab" data-toggle="tab">Payments</a></li>
+            <li role="presentation"><a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">Comments</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="people">...</div>
+            <div role="tabpanel" class="tab-pane" id="payments">...</div>
+            <div role="tabpanel" class="tab-pane" id="comments">
+                <div id="summernote"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

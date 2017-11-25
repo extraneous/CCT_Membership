@@ -1,0 +1,199 @@
+{% set ADMIN_SECTION = 1 %}
+{% set REPORT_SECTION = 2 %}
+{% set ADD_MEMBERS = 3 %}
+<style type="text/css">
+    .dropdown-submenu {
+        position: relative;
+    }
+
+    .dropdown-submenu>.dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -6px;
+        margin-left: -1px;
+        -webkit-border-radius: 0 6px 6px 6px;
+        -moz-border-radius: 0 6px 6px;
+        border-radius: 0 6px 6px 6px;
+    }
+
+    .dropdown-submenu:hover>.dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-submenu>a:after {
+        display: block;
+        content: " ";
+        float: right;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 5px 0 5px 5px;
+        border-left-color: #ccc;
+        margin-top: 5px;
+        margin-right: -10px;
+    }
+
+    .dropdown-submenu:hover>a:after {
+        border-left-color: #fff;
+    }
+
+    .dropdown-submenu.pull-left {
+        float: none;
+    }
+
+    .dropdown-submenu.pull-left>.dropdown-menu {
+        left: -100%;
+        margin-left: 10px;
+        -webkit-border-radius: 6px 0 6px 6px;
+        -moz-border-radius: 6px 0 6px 6px;
+        border-radius: 6px 0 6px 6px;
+    }
+</style>
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #14BD57;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index.php" style="color:white">CCT Membership System</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/index.php">Home</a></li>
+                {% if ADD_MEMBERS in user.perms %}
+                <li><a href="newMember.php">Add New Member</a></li>
+                {% endif %}
+                {% if REPORT_SECTION in user.perms %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Members By Month</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                {% if ADMIN_SECTION in user.perms %}
+                <li class="dropdown" id="adminMenuItem">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li id="memberAdminMenuItem"><a href="/memberAdmin.php">Membership Admin</a></li>
+                        <li id="userAdminMenuItem"><a href="/userAdmin.php">Admin Users</a></li>
+                    </ul>
+                </li>
+				<li class="dropdown" id="databaseMenuItem">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Database <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="padding-top:0px">
+                        <li id="MembershipAdminItem" class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Membership Admin</a>
+                            <ul class="dropdown-menu">
+                                <li id="db-personItem"><a href="/db-person.php">Person</a></li>
+                                <li id="db-addressItem"><a href="/db-address.php">Address</a></li>
+                                <li id="db-personMembershipItem"><a href="/db-personMembership.php">Person Membership</a></li>
+                                <li id="db-membershipItem"><a href="/db-membership.php">Membership</a></li>
+                                <li id="db-membershipServiceItem"><a href="/db-membershipService.php">Membership Service</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li id="db-paymentScheduleItem"><a href="/db-paymentSchedule.php">Payment Schedule</a></li>
+                                <li id="db-membershipTypeItem"><a href="/db-membershipType.php">Membership Type</a></li>
+                                <li id="db-sourceItem"><a href="/db-source.php">Source</a></li>
+                                <li id="db-serviceItem"><a href="/db-service.php">Service</a></li>
+                                <li id="db-memberNumberRangeItem"><a href="/db-memberNumberrange.php">Member Number Range</a></li>
+                            </ul>
+                        </li>
+                        <li id="databaseMenuItem" class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Subscriptions & Donations</a>
+                            <ul class="dropdown-menu">
+                                <li id="db-bankreceiptItem"><a href="/db-bankReceipt.php">Bank Receipt</a></li>
+                                <li id="db-bankreceiptBatchItem"><a href="/db-bankReceiptBatch.php">Bank Receipt Batch</a></li>
+                                <li id="db-personreceiptItem"><a href="/db-personReceipt.php">Personm Receipt</a></li>
+                                <li id="db-bankStatementEntryItem"><a href="/db-bankStatementEntry.php">Bank Statement Entry</a></li>
+                                <li id="db-personReceiptSplitItem"><a href="/db-personReceiptSplit.php">Person Receipt Split</a></li>
+                                <li id="db-accountPostingItem"><a href="/db-accountPosting.php">Account Posting</a></li>
+                                <li id="db-accountPostingSplitItem"><a href="/db-accountPostingSplit.php">Account Posting Split</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li id="db-bankAccountItem"><a href="/db-bankAccount.php">Bank Account</a></li>
+                                <li id="db-accountCodeItem"><a href="/db-accountCode.php">Account Code</a></li>
+                                <li id="db-incomeTypeItem"><a href="/db-incomeType.php">Income Type</a></li>
+                                <li id="db-nominalItem"><a href="/db-nominal.php">Nominal</a></li>
+                                <li id="db-departmentItem"><a href="/db-department.php">Department</a></li>
+                                <li id="db-fundItem"><a href="/db-fund.php">Fund</a></li>
+                                <li id="db-tranTypeItem"><a href="/db-tranType.php">Tran Type</a></li>
+                            </ul>
+                        </li>
+                        <li id="databaseMenuItem" class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Gift Aid Claims</a>
+                            <ul class="dropdown-menu">
+                                <li id="db-giftaidClaimItem"><a href="/db-giftaidClaim.php">Giftaid Claim</a></li>
+                                <li id="db-giftaidClaimItemItem"><a href="/db-giftaidClaimItem.php">Giftaid Claim Item</a></li>
+                            </ul>
+                        </li>
+                        <li id="databaseMenuItem" class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Mailing Lists</a>
+                            <ul class="dropdown-menu">
+                                <li id="db-personCampaignItem"><a href="/db-personCampaign.php">Person Campaign</a></li>
+                                <li id="db-personMailingItem"><a href="/db-personMailing.php">Person Mailing</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li id="db-appealItem"><a href="/db-appeal.php">Appeal</a></li>
+                                <li id="db-campaignItem"><a href="/db-campaign.php">Campaign</a></li>
+                                <li id="db-mailingItem"><a href="/db-mailing.php">Mailing</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <div class="navbar-brand">Logged In As {{ user.firstname }} {{ user.surname }}
+                    <a href="#" onclick="editMyDetails()" style="margin-left:8px;" title="Edit User Details" alt="Edit User Details"><i class="fa fa-pencil" style="color:white"></i></a>
+                    <a href="/logout.php" style="margin-left:4px;" title="Logout" alt="Logout"><i class="fa fa-sign-out" style="color:white"></i></a>
+                </div>
+            </ul>
+        </div><!--/.navbar-collapse -->
+    </div>
+</nav>
+
+<div class="modal fade" id="editUserDetailsModal" tabindex="-1" role="dialog" aria-labelledby="EditUserDetails">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update User Details</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form form-horizontal" name="editUserDetsFrm" id="editUserDetsFrm">
+                    <div class="form-group">
+                        <label for="editUserFirstName" class="col-sm-3 control-label">First Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="editUserFirstName" name="firstName" placeholder="First Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserSurname" class="col-sm-3 control-label">Surname</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="editUserSurname" name="surname" placeholder="Surname">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserEmail" class="col-sm-3 control-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="editUserEmail" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserPassword" class="col-sm-3 control-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="password" id="editUserPassword" placeholder="Password - only change to alter password">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times" style="color:red"></i> Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveEditedUserDets()"><i class="fa fa-floppy-o" style="color:white"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/menu.js"></script>

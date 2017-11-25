@@ -1,0 +1,135 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    {% include "menu.twig" %}
+{% endblock %}
+
+{% block main %}
+    <form class="form-horizontal" mathod="post" action="newMember.twig">
+        <div class="form-group">
+            <label for="memType" class="col-sm-2 control-label">Membership Type</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="memType" name="memType" onChange="memTypeChange()">
+                    <option value="-1">Please Select</option>
+                    <option value="family">Family</option>
+                    <option value="adult">Adult</option>
+                    <option value="life">Life</option>
+                    <option value="joint">Joint</option>
+                    <option value="seniorlife">Senior Life</option>
+                    <option value="seniorjoint">Senior Joint</option>
+                    <option value="corporate">Corporate</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="doantion" class="col-sm-2 control-label">Additional Donation</label>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <span class="input-group-addon">£</span>
+                    <input type="text" class="form-control" id="donation" name="donation"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="firstPersonFirstName" class="col-sm-2 control-label">First Name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="firstPersonFirstName" maxlength=""/>
+            </div>
+            <label for="firstPersonSurname" class="col-sm-2 control-label">Surname</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="firstPersonSurname" maxlength=""/>
+            </div>
+        </div>
+        <div class="form-group" id="secondPersonDiv" style="display:none">
+            <label for="secondPersonFirstName" class="col-sm-2 control-label">First Name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="secondPersonFirstName" maxlength=""/>
+            </div>
+            <label for="secondPersonSurname" class="col-sm-2 control-label">Surname</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="secondPersonSurname" maxlength=""/>
+            </div>
+        </div>
+        <div class="form-group" id="orgdiv" style="display:none">
+            <label for="organsiation" class="control-label col-sm-2">Organisation</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="organsiation" name="organisation" maxlength=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address1" class="control-label col-sm-2">Address 1</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="address1" name="address1" maxlength=""/>
+            </div>
+            <label for="address2" class="control-label col-sm-2">Address 2</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="address2" name="address2" maxlength=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address3" class="control-label col-sm-2">Address 3</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="address3" name="address3" maxlength=""/>
+            </div>
+            <label for="countrlySel" class="control-label col-sm-2">Country</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="countrySel" name="country" onChange="countrySelChange()">
+                    <option value="-1">Please Select</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="postcode" class="control-label col-sm-2">Postcode</label>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="postcode" name="postcode"  maxlength="10"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary" onclick="postcodeLookUp()"><i class="fa fa-info-circle"></i> Look up Address</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telephone" class="control-label col-sm-2">Telephone</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="telephone" name="telephone" maxlength=""/>
+            </div>
+            <label for="email" class="control-label col-sm-2">Email</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="email" name="email" maxlength=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" style="float:right" class="btn btn-primary" onclick="saveNewMember()"><i class="fa fa-floppy-o"></i> Save New Member</button>
+        </div>
+    </form>
+
+    <div class="modal fade" id="postcodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Postcode Look up</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody id="searchResult">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/template" id="addresstemplate">
+        <% _.each( rc.addresses, function( address ){ %>
+        <tr>
+            <td><%- address.full %></td>
+            <td align="center"><button type="button" class="btn btn-sm btn-primary" onclick="useAddress('<%- address.add1 %>','<%- address.add2 %>','<%- address.add3 %>')"><i class="fa fa-check"></i> Use this Address</button></td>
+        </tr>
+        <% }) %>
+    </script>
+{%  endblock %}

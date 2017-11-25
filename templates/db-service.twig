@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    {% include "menu.twig" %}
+{% endblock %}
+
+{% block main %}
+    <style type="text/css">
+        .buttons-edit{
+            margin-left:6px !important;
+        }
+        .buttons-remove{
+            margin-left:6px !important;
+        }
+    </style>
+    <p>A service that can be associated to a specific membership, e.g. receiving Trow via the post, 300 Club etc</p>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="Service" width="100%">
+        <thead>
+        <tr>
+            <th>Service Code</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+    </table>
+{% endblock %}
