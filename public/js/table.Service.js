@@ -7,6 +7,9 @@
 (function($){
 
 $(document).ready(function() {
+    $('#databaseMenuItem').addClass('active');
+    $('#MembershipAdminItem').addClass('active');
+    $('#db-serviceItem').addClass('active');
 	var editor = new $.fn.dataTable.Editor( {
 		ajax: 'php/table.Service.php',
 		table: '#Service',

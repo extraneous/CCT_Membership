@@ -8,6 +8,7 @@
 
 $(document).ready(function() {
 	$('#databaseMenuItem').addClass('active');
+    $('#MembershipAdminItem').addClass('active');
 	$('#db-addressItem').addClass('active');
 	var editor = new $.fn.dataTable.Editor( {
 		ajax: 'php/table.address.php',
