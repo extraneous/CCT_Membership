@@ -1,0 +1,29 @@
+{% extends "base.twig" %}
+
+{% block menu %}
+    {% include "menu.twig" %}
+{% endblock %}
+
+{% block main %}
+<style type="text/css">
+    .buttons-edit{
+        margin-left:6px !important;
+    }
+    .buttons-remove{
+        margin-left:6px !important;
+    }
+</style>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="bank_receipt_batch" width="100%">
+        <thead>
+        <tr>
+            <th>Bank Account</th>
+            <th>Paying In Amount</th>
+            <th>Paying In Reference</th>
+            <th>Bank Statement Date</th>
+            <th>Bank Statement Line</th>
+            <th>Bank Statement Amount</th>
+            <th>Receipt Type</th>
+        </tr>
+        </thead>
+    </table>
+{% endblock %}
